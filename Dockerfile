@@ -26,8 +26,8 @@ ENV SERVER_NAME="IcarusServerByMe" \
     SERVERADMINPASSWORD="password" \
     PUID=2198 \
     PGID=2198 \
-    SHUTDOWN_NOT_JOINED_FOR=-1 \
-    SHUTDOWN_EMPTY_FOR=-1 \
+    SHUTDOWN_NOT_JOINED_FOR=20 \
+    SHUTDOWN_EMPTY_FOR=20 \
     ALLOW_NON_ADMINS_LAUNCH="True" \
     ALLOW_NON_ADMINS_DELETE="False" \
     LOAD_PROSPECT="" \
@@ -40,7 +40,8 @@ ENV SERVER_NAME="IcarusServerByMe" \
     WINEPATH=/config/gamefiles \
     GAMEBASECONFIGDIR="/home/steam/.wine/drive_c/icarus/Saved/Config" \
     GAMECONFIGDIR="/home/steam/.wine/drive_c/icarus/Saved/Config/WindowsServer" \
-    GAMESAVESDIR="/config/gamefiles/Pal/Saved/SaveGames" \
+    GAMEBASESAVESDIR="/home/steam/.wine/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
+    GAMESAVESDIR="/home/steam/.wine/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
     SKIPUPDATE="false"
 
 ENTRYPOINT [ "/init.sh" ]
