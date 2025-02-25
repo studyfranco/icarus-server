@@ -10,7 +10,6 @@ RUN set -x \
 
 RUN mkdir -p /config \
  && chown steam:steam /config
- && mkdir -p /usr/local/etc /usr/local/etc/supervisor/conf.d/ /opt/icarus
 
 COPY init.sh /
 
