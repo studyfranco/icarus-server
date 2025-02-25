@@ -3,7 +3,7 @@ LABEL maintainer="studyfranco@hotmail.fr"
 
 RUN set -x \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz cabextract curl winbind jq wine64 wine software-properties-common wget --no-install-recommends\
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz winbind jq wine64 wine --no-install-recommends\
     && rm -rf /var/lib/apt/lists/*  \
     && rm -rf /var/log/* \
     && gosu nobody true
@@ -11,7 +11,7 @@ RUN set -x \
 RUN mkdir -p /config \
  && chown steam:steam /config
 
-COPY init.sh /
+COPY --chmod=700 init.sh /
 
 COPY --chown=steam:steam *.ini run.sh /home/steam/
 
