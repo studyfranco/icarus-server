@@ -13,7 +13,7 @@ RUN mkdir -p /config \
 
 COPY --chmod=700 init.sh /
 
-COPY --chown=steam:steam *.ini run.sh /home/steam/
+COPY --chown=steam:steam --chmod=700 *.ini run.sh /home/steam/
 
 WORKDIR /config
 
