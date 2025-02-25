@@ -1,28 +1,41 @@
-version: "3"
+version: "3.7"
 services:
   icarus:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        WINE_BRANCH: staging
-    image: mornedhels/icarus-server:dev
-    container_name: icarus
-    hostname: icarus
-    restart: unless-stopped
-    stop_grace_period: 90s
-    ports:
-      - "17777:17777/udp"
-      - "27015:27015/udp"
+    container_name: icarus-server
+    hostname: icarus-server
+    image: ghcr.io/studyfranco/icarus-server:master
+    #network_mode: "host"
     volumes:
-      - ./data:/home/icarus/drive_c/icarus
-      - ./game:/opt/icarus
+      - "/path/to/config:/config"
+    ports:
+      - 17777:17777/udp
+      - 27015:27015/udp
+    expose:
+      - 8211/udp
+      - 27015/udp
     environment:
-      - SERVER_NAME=MornedhelsTest
-      - SERVER_PORT=17777
-      - SERVER_QUERYPORT=27015
-      - PUID=4711
-      - PGID=4711
-      - UPDATE_CRON=*/30 * * * *
-      - CLEANUP_CRON=*/10 * * * *
-      - log_level=50
+      - "SERVER_NAME=IcarusServerByMe"
+      - "SERVER_PORT=17777"
+      - "SERVER_QUERY_PORT=27015"
+      - "MAXPLAYERS=32"
+      - "SERVERPASSWORD=password"
+      - "SERVERADMINPASSWORD=password"
+      - "PUID=2198"
+      - "PGID=2198"
+      - SHUTDOWN_NOT_JOINED_FOR=-1
+      - SHUTDOWN_EMPTY_FOR=-1
+      - ALLOW_NON_ADMINS_LAUNCH="True"
+      - ALLOW_NON_ADMINS_DELETE="False"
+      - LOAD_PROSPECT=""
+      - CREATE_PROSPECT=""
+      - RESUME_PROSPECT="True"
+      - STEAM_ASYNC_TIMEOUT=60
+      - BRANCH="public"
+      - "TZ=Etc/UTC"
+    tmpfs:
+      - "/run:exec,mode=777"
+      - "/tmp:exec,mode=777"
+      - "/tmp/dumps:exec,mode=777"
+      - "/var/tmp:exec,mode=777"
+      #- "/config/gamefiles/steamapps/temp:uid=2198,gid=2198"
+    restart: "unless-stopped"

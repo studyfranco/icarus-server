@@ -1,41 +1,47 @@
-FROM steamcmd/steamcmd:ubuntu-22@sha256:33007178afdd812d97d44c8e384c1ea302769823f3ef9f8f6db9206fb08e63a0
-LABEL maintainer="docker@mornedhels.de"
+FROM cm2network/steamcmd:root
+LABEL maintainer="studyfranco@hotmail.fr"
 
-# Install prerequisites
-RUN apt-get update \
-    && DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
-        cabextract \
-        curl \
-        winbind \
-        supervisor \
-        cron \
-        rsyslog \
-        jq
+RUN set -x \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz cabextract curl winbind jq wine64 wine software-properties-common wget --no-install-recommends\
+    && rm -rf /var/lib/apt/lists/*  \
+    && rm -rf /var/log/* \
+    && gosu nobody true
 
-# Install wine
-ARG WINE_BRANCH=stable
-RUN dpkg --add-architecture i386 \
-    && mkdir -pm755 /etc/apt/keyrings \
-    && curl -o /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
-    && curl -O --output-dir /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/$(grep VERSION_CODENAME= /etc/os-release | cut -d= -f2)/winehq-$(grep VERSION_CODENAME= /etc/os-release | cut -d= -f2).sources \
-    && apt update && DEBIAN_FRONTEND="noninteractive" apt -y --install-recommends install winehq-${WINE_BRANCH}
+RUN mkdir -p /config \
+ && chown steam:steam /config
+ && mkdir -p /usr/local/etc /usr/local/etc/supervisor/conf.d/ /opt/icarus
 
-# Install winetricks (unused)
-RUN curl -o /tmp/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
-    && chmod +x /tmp/winetricks && install -m 755 /tmp/winetricks /usr/local/bin/winetricks
+COPY init.sh /
 
-# MISC
-RUN mkdir -p /usr/local/etc /var/log/supervisor /var/run/icarus /usr/local/etc/supervisor/conf.d/ /opt/icarus /home/icarus/.steam \
-    && groupadd -g "${PGID:-4711}" -o icarus \
-    && useradd -g "${PGID:-4711}" -u "${PUID:-4711}" -o --create-home icarus \
-    && sed -i '/imklog/s/^/#/' /etc/rsyslog.conf \
-    && mkdir -m 1777 -p /tmp/.X11-unix \
-    && apt autoremove --purge && apt clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+COPY --chown=steam:steam *.ini run.sh /home/steam/
 
-COPY ./supervisord.conf /etc/supervisor/supervisord.conf
-COPY --chmod=755 ./scripts/* /usr/local/etc/icarus/
+WORKDIR /config
 
-WORKDIR /usr/local/etc/icarus
-CMD ["/usr/local/etc/icarus/bootstrap"]
-ENTRYPOINT []
+ENV SERVER_NAME="IcarusServerByMe" \
+    SERVER_PORT=17777 \
+    SERVER_QUERY_PORT=27015 \
+    STEAMAPPID=2089300 \
+    MAXPLAYERS=32 \
+    SERVERPASSWORD="password" \
+    SERVERADMINPASSWORD="password" \
+    PUID=2198 \
+    PGID=2198 \
+    SHUTDOWN_NOT_JOINED_FOR=-1 \
+    SHUTDOWN_EMPTY_FOR=-1 \
+    ALLOW_NON_ADMINS_LAUNCH="True" \
+    ALLOW_NON_ADMINS_DELETE="False" \
+    LOAD_PROSPECT="" \
+    CREATE_PROSPECT="" \
+    RESUME_PROSPECT="True" \
+    STEAM_ASYNC_TIMEOUT=60 \
+    BRANCH="public" \
+    WINEPREFIX=/home/steam/icarus \
+    WINEARCH=win64 \
+    WINEPATH=/config/gamefiles \
+    GAMEBASECONFIGDIR="/home/steam/.wine/drive_c/icarus/Saved/Config" \
+    GAMECONFIGDIR="/home/steam/.wine/drive_c/icarus/Saved/Config/WindowsServer" \
+    GAMESAVESDIR="/config/gamefiles/Pal/Saved/SaveGames" \
+    SKIPUPDATE="false"
+
+ENTRYPOINT [ "/init.sh" ]

@@ -1,0 +1,82 @@
+#!/bin/bash
+
+set -e
+
+set_ini_prop() {
+    sed "/\[$2\]/,/^\[/ s/$3\=.*/$3=$4/" -i "${GAMECONFIGDIR}/$1"
+}
+
+set_ini_val() {
+    sed "/\[$2\]/,/^\[/ s/((\"$3\",.*))/((\"$3\", $4))/" -i "/home/steam/$1"
+}
+
+NUMCHECK='^[0-9]+$'
+launchDate=`date +"%Y_%m_%d_%H_%M_%s"`
+
+#if [ -f "${GAMECONFIGDIR}/PalWorldSettings.ini" ]; then
+#    tar cf - "/config/saves" "/config/gameconfigs" | pigz -9 -p 12 - > "/config/backups/${launchDate}.tar.gz"
+#fi
+
+mkdir -p "${GAMEBASECONFIGDIR}"
+
+if [ ! -L "${GAMECONFIGDIR}" ]; then
+    ln -sf "/config/gameconfigs" "${GAMECONFIGDIR}"
+fi
+
+#if [ ! -L "${GAMESAVESDIR}" ]; then
+#    ln -sf "/config/saves" "${GAMESAVESDIR}"
+#fi
+
+echo Initializing Wine...
+wineboot --init > /dev/null 2>&1
+
+## Initialise and update files
+if ! [[ "${SKIPUPDATE,,}" == "true" ]]; then
+
+    space=$(stat -f --format="%a*%S" .)
+    space=$((space/1024/1024/1024))
+    printf "Checking available space...%sGB detected\\n" "${space}"
+
+    if [[ "$space" -lt 8 ]]; then
+        printf "You have less than 8GB (%sGB detected) of available space to download the game.\\nIf this is a fresh install, it will probably fail.\\n" "${space}"
+    fi
+
+    printf "Downloading the latest version of the game...\\n"
+
+    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType windows +force_install_dir /config/gamefiles +login anonymous +app_update "$STEAMAPPID" -beta "${BRANCH}" validate +quit
+else
+    printf "Skipping update as flag is set\\n"
+fi
+
+#if [ ! -f "${GAMECONFIGDIR}/PalWorldSettings.ini" ]; then
+#    cp "/config/gamefiles/DefaultPalWorldSettings.ini" "/config/gameconfigs/PalWorldSettings.ini"
+#    sed -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=\"${SERVERADMINPASSWORD}\"/" "/config/gameconfigs/PalWorldSettings.ini"
+#    sed -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=\"${SERVERPASSWORD}\"/" "/config/gameconfigs/PalWorldSettings.ini"
+#    sed -i "s/ServerName=\"[^\"]*\"/ServerName=\"${SERVER_NAME}\"/" "/config/gameconfigs/PalWorldSettings.ini"
+#fi
+
+if ! [[ "$MAXPLAYERS" =~ $NUMCHECK ]] ; then
+    printf "Invalid max players number given: %s\\n" "${MAXPLAYERS}"
+    MAXPLAYERS=32
+fi
+#sed -i "s/ServerPlayerMaxNum=[0-9]*/ServerPlayerMaxNum=${MAXPLAYERS}/" "/config/gameconfigs/PalWorldSettings.ini"
+
+if ! [[ "$SERVER_PORT" =~ $NUMCHECK ]] ; then
+    printf "Invalid max players number given: %s\\n" "${SERVER_PORT}"
+    SERVER_PORT=17777
+fi
+#sed -i "s/PublicPort=[0-9]*/PublicPort=${SERVER_PORT}/" "/config/gameconfigs/PalWorldSettings.ini"
+
+if ! [[ "$SERVER_QUERY_PORT" =~ $NUMCHECK ]] ; then
+    printf "Invalid max players number given: %s\\n" "${SERVER_QUERY_PORT}"
+    SERVER_QUERY_PORT=27015
+fi
+
+cd /config/gamefiles || exit 1
+
+exec wine /config/gamefiles/Icarus/Binaries/Win64/IcarusServer-Win64-Shipping.exe \
+  -Log \
+  -UserDir='C:\icarus' \
+  -SteamServerName="${SERVER_NAME}" \
+  -PORT="${SERVER_PORT}" \
+  -QueryPort="${SERVER_QUERY_PORT}"
