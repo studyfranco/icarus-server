@@ -55,10 +55,9 @@ else
     printf "Skipping update as flag is set\\n"
 fi
 
-configPath='/home/steam/.wine/drive_c/icarus/Saved/Config/WindowsServer'
-engineIni="${configPath}/Engine.ini"
+engineIni="${GAMECONFIGDIR}/Engine.ini"
 if [[ ! -e ${engineIni} ]]; then
-  mkdir -p ${configPath}
+  mkdir -p ${GAMECONFIGDIR}
   touch ${engineIni}
 fi
 
@@ -77,7 +76,7 @@ sedCommand="/AsyncTaskTimeout=/c\AsyncTaskTimeout=${STEAM_ASYNC_TIMEOUT}"
 sed -i ${sedCommand} ${engineIni}
 
 
-serverSettingsIni="${configPath}/ServerSettings.ini"
+serverSettingsIni="${GAMECONFIGDIR}/ServerSettings.ini"
 if [[ ! -e ${serverSettingsIni} ]]; then
   touch ${serverSettingsIni}
 fi
@@ -116,12 +115,12 @@ sed -i "/CreateProspect=/c\CreateProspect=${CREATE_PROSPECT}" ${serverSettingsIn
 sed -i "/ResumeProspect=/c\ResumeProspect=${RESUME_PROSPECT}" ${serverSettingsIni}
 
 if ! [[ "$SERVER_PORT" =~ $NUMCHECK ]] ; then
-    printf "Invalid max players number given: %s\\n" "${SERVER_PORT}"
+    printf "Invalid server port given: %s\\n" "${SERVER_PORT}"
     SERVER_PORT=17777
 fi
 
 if ! [[ "$SERVER_QUERY_PORT" =~ $NUMCHECK ]] ; then
-    printf "Invalid max players number given: %s\\n" "${SERVER_QUERY_PORT}"
+    printf "Invalid server query port given: %s\\n" "${SERVER_QUERY_PORT}"
     SERVER_QUERY_PORT=27015
 fi
 

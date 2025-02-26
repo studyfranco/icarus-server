@@ -35,13 +35,13 @@ ENV SERVER_NAME="IcarusServerByMe" \
     RESUME_PROSPECT="True" \
     STEAM_ASYNC_TIMEOUT=60 \
     BRANCH="public" \
-    WINEPREFIX=/home/steam/icarus \
     WINEARCH=win64 \
     WINEPATH=/config/gamefiles \
-    GAMEBASECONFIGDIR="/home/steam/.wine/drive_c/icarus/Saved/Config" \
-    GAMECONFIGDIR="/home/steam/.wine/drive_c/icarus/Saved/Config/WindowsServer" \
-    GAMEBASESAVESDIR="/home/steam/.wine/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
-    GAMESAVESDIR="/home/steam/.wine/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
+    WINEPREFIX=/home/steam/icarus \
+    GAMEBASECONFIGDIR="/home/steam/icarus/drive_c/icarus/Saved/Config" \
+    GAMECONFIGDIR="/home/steam/icarus/drive_c/icarus/Saved/Config/WindowsServer" \
+    GAMEBASESAVESDIR="/home/steam/icarus/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
+    GAMESAVESDIR="/home/steam/icarus/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
     SKIPUPDATE="false"
 
 ENTRYPOINT [ "/init.sh" ]

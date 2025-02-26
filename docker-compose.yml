@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   icarus:
     container_name: icarus-server
@@ -11,7 +10,7 @@ services:
       - 17777:17777/udp
       - 27015:27015/udp
     expose:
-      - 8211/udp
+      - 17777/udp
       - 27015/udp
     environment:
       - "SERVER_NAME=IcarusServerByMe"
@@ -37,5 +36,6 @@ services:
       - "/tmp:exec,mode=777"
       - "/tmp/dumps:exec,mode=777"
       - "/var/tmp:exec,mode=777"
-      #- "/config/gamefiles/steamapps/temp:uid=2198,gid=2198"
+      - "/config/gamefiles/steamapps/temp:uid=2198,gid=2198"
     restart: "unless-stopped"
+    init: true
