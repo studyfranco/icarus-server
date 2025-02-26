@@ -2,8 +2,9 @@ FROM cm2network/steamcmd:root
 LABEL maintainer="studyfranco@hotmail.fr"
 
 RUN set -x \
+    && echo "deb https://deb.debian.org/debian/ testing main contrib non-free non-free-firmware" >> /etc/apt/sources.list \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz winbind jq wine64 wine --no-install-recommends\
+    && DEBIAN_FRONTEND=noninteractive apt-get install -t testing -y gosu pigz winbind jq wine64 wine --no-install-recommends\
     && rm -rf /var/lib/apt/lists/*  \
     && rm -rf /var/log/* \
     && gosu nobody true
