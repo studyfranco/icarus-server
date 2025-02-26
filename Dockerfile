@@ -5,7 +5,7 @@ ARG PROTON_VERSION="GE-Proton9-25"
 
 RUN set -x \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz curl --no-install-recommends\
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz curl python3 --no-install-recommends\
     && rm -rf /var/lib/apt/lists/*  \
     && rm -rf /var/log/* \
     && gosu nobody true
