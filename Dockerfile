@@ -47,6 +47,7 @@ ENV SERVER_NAME="IcarusServerByMe" \
     GAMEBASESAVESDIR="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
     GAMESAVESDIR="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
     PROTON_VERSION=${PROTON_VERSION} \
+    STEAM_COMPAT_DATA_PATH="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}" \
     SKIPUPDATE="false"
 
 ENTRYPOINT [ "/init.sh" ]
