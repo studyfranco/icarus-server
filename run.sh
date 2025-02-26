@@ -13,7 +13,7 @@ set_ini_val() {
 NUMCHECK='^[0-9]+$'
 launchDate=`date +"%Y_%m_%d_%H_%M_%s"`
 
-if [ -f "${GAMECONFIGDIR}/PalWorldSettings.ini" ]; then
+if [ -f "${GAMECONFIGDIR}/Engine.ini" ]; then
     tar cf - "/config/saves" "/config/gameconfigs" | pigz -9 -p 12 - > "/config/backups/${launchDate}.tar.gz"
 fi
 
@@ -34,8 +34,8 @@ if [ ! -L "${GAMESAVESDIR}" ]; then
     ln -sf "/config/saves" "${GAMESAVESDIR}"
 fi
 
-echo Initializing Wine...
-wineboot --init > /dev/null 2>&1
+echo Initializing Proton...
+/home/steam/.steam/steam/steamapps/common/Proton\ ${PROTON_VERSION}/proton run /bin/true
 
 ## Initialise and update files
 if ! [[ "${SKIPUPDATE,,}" == "true" ]]; then
@@ -126,7 +126,7 @@ fi
 
 cd /config/gamefiles || exit 1
 
-exec wine /config/gamefiles/Icarus/Binaries/Win64/IcarusServer-Win64-Shipping.exe \
+exec exec /home/steam/.steam/steam/steamapps/common/Proton\ ${PROTON_VERSION}/proton run /config/gamefiles/Icarus/Binaries/Win64/IcarusServer-Win64-Shipping.exe \
   -Log \
   -UserDir='C:\icarus' \
   -SteamServerName="${SERVER_NAME}" \

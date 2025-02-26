@@ -1,16 +1,20 @@
 FROM cm2network/steamcmd:root
 LABEL maintainer="studyfranco@hotmail.fr"
 
+ARG PROTON_VERSION="GE-Proton9-25"
+
 RUN set -x \
     && dpkg --add-architecture i386 \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz winbind jq wine64 wine wine32:i386 --no-install-recommends\
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz curl --no-install-recommends\
     && rm -rf /var/lib/apt/lists/*  \
     && rm -rf /var/log/* \
     && gosu nobody true
 
 RUN mkdir -p /config \
  && chown steam:steam /config
+ && mkdir -p /home/steam/.steam/steam/compatibilitytools.d \
+ && curl -L "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${PROTON_VERSION}/${PROTON_VERSION}.tar.gz" | tar xz -C /home/steam/.steam/steam/compatibilitytools.d
 
 COPY --chmod=700 init.sh /
 
@@ -39,10 +43,11 @@ ENV SERVER_NAME="IcarusServerByMe" \
     WINEARCH=win64 \
     WINEPATH=/config/gamefiles \
     WINEPREFIX=/home/steam/icarus \
-    GAMEBASECONFIGDIR="/home/steam/icarus/drive_c/icarus/Saved/Config" \
-    GAMECONFIGDIR="/home/steam/icarus/drive_c/icarus/Saved/Config/WindowsServer" \
-    GAMEBASESAVESDIR="/home/steam/icarus/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
-    GAMESAVESDIR="/home/steam/icarus/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
+    GAMEBASECONFIGDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/Config" \
+    GAMECONFIGDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/Config/WindowsServer" \
+    GAMEBASESAVESDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
+    GAMESAVESDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
+    PROTON_VERSION=${PROTON_VERSION} \
     SKIPUPDATE="false"
 
 ENTRYPOINT [ "/init.sh" ]
