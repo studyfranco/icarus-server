@@ -35,7 +35,7 @@ if [ ! -L "${GAMESAVESDIR}" ]; then
 fi
 
 echo Initializing Proton...
-/home/steam/.steam/steam/steamapps/common/Proton\ ${PROTON_VERSION}/proton run /bin/true
+/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/proton run /bin/true
 
 ## Initialise and update files
 if ! [[ "${SKIPUPDATE,,}" == "true" ]]; then
@@ -126,7 +126,7 @@ fi
 
 cd /config/gamefiles || exit 1
 
-exec exec /home/steam/.steam/steam/steamapps/common/Proton\ ${PROTON_VERSION}/proton run /config/gamefiles/Icarus/Binaries/Win64/IcarusServer-Win64-Shipping.exe \
+exec exec /home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/proton run /config/gamefiles/Icarus/Binaries/Win64/IcarusServer-Win64-Shipping.exe \
   -Log \
   -UserDir='C:\icarus' \
   -SteamServerName="${SERVER_NAME}" \

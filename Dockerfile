@@ -4,7 +4,6 @@ LABEL maintainer="studyfranco@hotmail.fr"
 ARG PROTON_VERSION="GE-Proton9-25"
 
 RUN set -x \
-    && dpkg --add-architecture i386 \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y gosu pigz curl --no-install-recommends\
     && rm -rf /var/lib/apt/lists/*  \
@@ -43,10 +42,10 @@ ENV SERVER_NAME="IcarusServerByMe" \
     WINEARCH=win64 \
     WINEPATH=/config/gamefiles \
     WINEPREFIX=/home/steam/icarus \
-    GAMEBASECONFIGDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/Config" \
-    GAMECONFIGDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/Config/WindowsServer" \
-    GAMEBASESAVESDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
-    GAMESAVESDIR="/home/steam/.steam/steam/steamapps/common/Proton ${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
+    GAMEBASECONFIGDIR="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/Config" \
+    GAMECONFIGDIR="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/Config/WindowsServer" \
+    GAMEBASESAVESDIR="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer" \
+    GAMESAVESDIR="/home/steam/.steam/steam/compatibilitytools.d/${PROTON_VERSION}/dist/share/default_pfx/drive_c/icarus/Saved/PlayerData/DedicatedServer/Prospects" \
     PROTON_VERSION=${PROTON_VERSION} \
     SKIPUPDATE="false"
 
