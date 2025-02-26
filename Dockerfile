@@ -12,7 +12,7 @@ RUN set -x \
     && gosu nobody true
 
 RUN mkdir -p /config \
- && chown steam:steam /config
+ && chown steam:steam /config \
  && mkdir -p /home/steam/.steam/steam/compatibilitytools.d \
  && curl -L "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${PROTON_VERSION}/${PROTON_VERSION}.tar.gz" | tar xz -C /home/steam/.steam/steam/compatibilitytools.d
 
