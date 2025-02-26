@@ -5,6 +5,7 @@ services:
     image: ghcr.io/studyfranco/icarus-server:master
     #network_mode: "host"
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - "/path/to/config:/config"
     ports:
       - 17777:17777/udp
@@ -16,7 +17,7 @@ services:
       - "SERVER_NAME=IcarusServerByMe"
       - "SERVER_PORT=17777"
       - "SERVER_QUERY_PORT=27015"
-      - "MAXPLAYERS=32"
+      - "MAXPLAYERS=8"
       - "SERVERPASSWORD=password"
       - "SERVERADMINPASSWORD=password"
       - "PUID=2198"
