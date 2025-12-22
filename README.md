@@ -160,3 +160,6 @@ volumes:
       ```bash
         echo "vm.max_map_count=262144" >> /etc/sysctl.conf && sysctl -p
       ```
+
+## Last Update
+2025-12-20
